@@ -3,11 +3,11 @@
   become: yes
   tasks:
     - name: Update all the packages
-      dnf:
+      apt:
         name: '*'
         state: latest
     - name: Install required packages
-      dnf:
+      apt:
         name:
           - nginx
           - firewalld

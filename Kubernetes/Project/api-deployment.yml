@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: api-deployment
+spec:
+  replicas:
+  selector:
+    matchLabels:
+      component: api
+  template:
+    metadata:
+      labels:
+        component: api
+    spec:
+      containers:
+        - name: blogapi
+          image: docker.io/pavan8247/simple_blog_api
+          ports:
+            - containerPort: 3000
+          resources: 
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

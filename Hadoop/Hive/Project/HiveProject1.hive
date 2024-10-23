@@ -1,0 +1,36 @@
+-- Create tables for each episode
+CREATE TABLE episodeIV_dialogues (name STRING, line STRING)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t';
+
+CREATE TABLE episodeV_dialogues (name STRING, line STRING)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t';
+
+CREATE TABLE episodeVI_dialogues (name STRING, line STRING)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t';
+
+-- Load data into tables
+LOAD DATA INPATH 'hdfs:///user/pavan/input/episodeIV_dialogues.txt' INTO TABLE episodeIV_dialogues;
+LOAD DATA INPATH 'hdfs:///user/pavan/input/episodeV_dialogues.txt' INTO TABLE episodeV_dialogues;
+LOAD DATA INPATH 'hdfs:///user/pavan/input/episodeVI_dialogues.txt' INTO TABLE episodeVI_dialogues;
+
+-- Union all tables and count the lines spoken by each character
+CREATE TABLE character_line_counts AS
+SELECT name AS character, COUNT(*) AS line_count
+FROM (
+  SELECT name FROM episodeIV_dialogues
+  UNION ALL
+  SELECT name FROM episodeV_dialogues
+  UNION ALL
+  SELECT name FROM episodeVI_dialogues
+) combined
+GROUP BY name
+ORDER BY line_count DESC;
+
+-- Save the result in HDFS
+INSERT OVERWRITE DIRECTORY 'hdfs:///user/pavan/HiveProjectOutput1'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+SELECT * FROM character_line_counts;

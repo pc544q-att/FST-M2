@@ -1,0 +1,11 @@
+-- Count the number of lines that contain the word "Luke"
+CREATE TABLE luke_line_count AS
+SELECT COUNT(*) AS luke_lines
+FROM episodeIV_dialogues
+WHERE line LIKE '%Luke%';
+
+-- Save the result in HDFS
+INSERT OVERWRITE DIRECTORY 'hdfs:///user/pavan/HiveLukeCountOutput'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+SELECT * FROM luke_line_count;

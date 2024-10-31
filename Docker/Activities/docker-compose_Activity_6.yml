@@ -1,0 +1,9 @@
+services:
+    redis-server:
+        image: 'redis'
+        command: ["redis-server", "--protected-mode", "no"]
+    node-app:
+        build: ./
+        image: docker.io/pavankumarchunchu/visits
+        ports:
+            - "8081:8081"
